@@ -1,5 +1,5 @@
 function love.load()
-    love.window.setTitle("My Love2D Game")
+    love.window.setTitle("Lazer Tag")
     love.window.setMode(800, 600)
     width, height = love.graphics.getDimensions()
     shootSound = love.audio.newSource("shoot.wav", "static")
@@ -40,12 +40,12 @@ function drawPlayer(player)
     love.graphics.setColor(1, 1, 1)
     for i = 1, 5 do
         if i > player.health then
-            love.graphics.setColor(1, 1, 1, 0.5) -- Dark color for lost health
+            love.graphics.setColor(1, 1, 1, 0.5) --  Dark color for lost health
         else
             love.graphics.setColor(1, 1, 1) -- White color for remaining health
         end
         love.graphics.push()
-        love.graphics.rotate(math.pi*2/5 * i)
+        love.graphics.rotate(math.pi*2/5 * i) 
         love.graphics.translate(15, 0)
         love.graphics.circle("fill", 0, 0, 6)
         love.graphics.pop()
@@ -94,11 +94,11 @@ function moveBullets(dt)
     end
 end
 
-function bulletColision(bullet, player, otherPlayer)
+function bulletColision(bullet, player, otherPlayer, bulletIndex)
     local dist = distance(bullet, player)
     if dist < 30 then
             print("Player 1 hit Player 2!")
-            table.remove(otherPlayer.bullets, i)
+            table.remove(otherPlayer.bullets, bulletIndex)
             if love.timer.getTime() - player.lastblocktime < 2 then
                 return
             end
@@ -107,7 +107,7 @@ function bulletColision(bullet, player, otherPlayer)
                 love.event.quit()
             end
         elseif bullet.x < 0 or bullet.x > width or bullet.y < 0 or bullet.y > height then
-            table.remove(otherPlayer.bullets, i)
+            table.remove(otherPlayer.bullets, bulletIndex)
         end
 end
 
@@ -122,11 +122,11 @@ function love.update(dt)
     moveBullets(dt)
 
     for i, bullet in ipairs(player1.bullets) do
-       bulletColision(bullet, player2, player1)
+       bulletColision(bullet, player2, player1, i)
     end
 
     for i, bullet in ipairs(player2.bullets) do
-         bulletColision(bullet, player1, player2)
+         bulletColision(bullet, player1, player2, i)
     end
 
 -- Reset player colors after block duration
